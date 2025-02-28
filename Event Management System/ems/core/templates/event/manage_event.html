@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Manage Event: {{ event.event_name }}</h2>
+    <p><strong>Type:</strong> {{ event.event_type }}</p>
+    <p><strong>Date:</strong> {{ event.date }}</p>
+    <p><strong>Budget:</strong> ${{ event.budget }}</p>
+    <p><strong>Description:</strong> {{ event.description }}</p>
+
+    <hr>
+
+    <a href="{% url 'assign_vendor' %}?event_id={{ event.event_id }}" class="btn btn-success btn-sm" title="Assign Vendor">
+        <i class="bi bi-person-plus-fill"></i> Assign Vendor
+    </a>
+    <br>
+    <a href="{% url 'event_ssp_list' event.event_id  %}?" class="btn btn-success btn-sm" title="Assign Vendor">
+        <i class="bi bi-person-plus-fill"></i> Add SSP
+    </a>
+    <br>
+    <a href="{% url 'event_creation:dashboard_ec' event.event_id %}" class="btn btn-success btn-sm" title="Event Creation">
+        <i class="bi bi-person-plus-fill"></i> SSP Flow
+    </a>
+    
+
+    <p>Future features to be added here:</p>
+    <ul>
+
+        <li>Venue Management</li>
+        <li>Guest Management</li>
+        <li>Vendor Assignment</li>
+        <li>Cost Tab</li>
+        <li>Details Management</li>
+        <li>Reports</li>
+    </ul>
+</div>
+{% endblock %}

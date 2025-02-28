@@ -1,0 +1,15 @@
+<!-- templates/add_ssp.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add SSP</title>
+</head>
+<body>
+    <h1>Add a New SSP</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

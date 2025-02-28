@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block content %}
+<h2>Summary of SSPs for Event: {{ event.event_name }}</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linked_ssp in linked_ssps %}
+        <tr>
+            <td><img src="{{ linked_ssp.ssp.image.url }}" alt="{{ linked_ssp.ssp.name }}" width="50"></td>
+            <td>{{ linked_ssp.ssp.name }}</td>
+            <td>₹{{ linked_ssp.ssp.rate_per_event }}</td>
+            <td>{{ linked_ssp.quantity }}</td>
+            <td>₹{{ linked_ssp.quantity|multiply:linked_ssp.ssp.rate_per_event }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'event_creation:dashboard_ec' event.event_id %}" class="btn btn-primary">Back to Dashboard</a>
+{% endblock %}

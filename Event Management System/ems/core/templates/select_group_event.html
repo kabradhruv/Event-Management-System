@@ -1,0 +1,53 @@
+<!-- select_group_event.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Select Group and Event</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="group">Group:</label>
+    <select id="group" name="group">
+      <option value="">Select a group</option>
+      {% for group in groups %}
+        <option value="{{ group.group_id }}">{{ group.group_name }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="event">Event:</label>
+    <select id="event" name="event">
+      <option value="">Select an event</option>
+    </select>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const groupSelect = document.getElementById('group');
+      const eventSelect = document.getElementById('event');
+
+      groupSelect.addEventListener('change', function() {
+        const groupId = groupSelect.value;
+        if (groupId) {
+          fetch(`/get_events/${groupId}/`)
+            .then(response => response.json())
+            .then(data => {
+              eventSelect.innerHTML = '<option value="">Select an event</option>';
+              data.events.forEach(event => {
+                const option = document.createElement('option');
+                option.value = event.event_id;
+                option.textContent = event.event_name;
+                eventSelect.appendChild(option);
+              });
+            });
+        } else {
+          eventSelect.innerHTML = '<option value="">Select an event</option>';
+        }
+      });
+    });
+  </script>
+{% endblock %}

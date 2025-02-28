@@ -1,0 +1,117 @@
+/* Basic Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #2c3e50; /* Dark blue background */
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: center; /* Center the navbar content */
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif; /* Great font for the brand */
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff; /* White text */
+    margin-right: 40px; /* Space between brand and links */
+}
+
+.navbar-links {
+    display: flex;
+    gap: 25px; /* Space between links */
+}
+
+.nav-link {
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #34495e; /* Slightly lighter blue on hover */
+}
+
+/* Content Styles */
+.content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+/* Welcome Message */
+.welcome-message {
+    font-family: 'Montserrat', sans-serif; /* Great font for the welcome message */
+    font-size: 36px;
+    font-weight: 600;
+    color: #2c3e50; /* Dark blue */
+    margin-bottom: 20px;
+}
+
+.welcome-subtext {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: #e74c3c; /* Red */
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-brand {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .welcome-message {
+        font-size: 28px;
+    }
+
+    .welcome-subtext {
+        font-size: 16px;
+    }
+}

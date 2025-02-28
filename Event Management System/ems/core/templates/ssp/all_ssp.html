@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Manage All SSPs</h2>
+
+<form method="post" action="{% url 'update_all_ssps' %}">
+  {% csrf_token %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Rate (₹)</th>
+        <th>Tags</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ssp in ssps %}
+      <tr>
+        <!-- Image -->
+        <td>
+          {% if ssp.image %}
+          <img src="{{ ssp.image.url }}" alt="{{ ssp.name }}" width="50" />
+          {% else %}
+          <span>No Image</span>
+          {% endif %}
+        </td>
+
+        <!-- Editable Name -->
+        <td>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="name_{{ ssp.item_id }}"
+            value="{{ ssp.name }}"
+            required
+          />
+        </td>
+
+        <!-- Editable Type -->
+        <td>
+          <select
+            class="form-control form-control-sm"
+            name="type_{{ ssp.item_id }}"
+            required
+          >
+            {% for type, label in ssp.ITEM_TYPES %}
+            <option value="{{ type }}" {% if type == ssp.item_type %}selected{% endif %}>
+              {{ label }}
+            </option>
+            {% endfor %}
+          </select>
+        </td>
+
+        <!-- Editable Rate -->
+        <td>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            name="rate_{{ ssp.item_id }}"
+            value="{{ ssp.rate_per_event }}"
+            step="0.01"
+            required
+          />
+        </td>
+
+        <!-- Editable Tags -->
+        <td>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="tags_{{ ssp.item_id }}"
+            value="{{ ssp.tags }}"
+          />
+        </td>
+
+        <!-- Actions -->
+        <td>
+          <!-- Remove Button -->
+          <form
+            method="post"
+            action="{% url 'remove_ssp' ssp.item_id %}"
+            style="display: inline;"
+          >
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="btn btn-danger btn-sm"
+              onclick="return confirm('Are you sure you want to remove this SSP?');"
+            >
+              Remove
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Update All Button -->
+  <button type="submit" class="btn btn-primary">
+    Save Changes
+  </button>
+</form>
+{% endblock %}

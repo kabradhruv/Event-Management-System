@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load custom_filters %} 
+
+{% block content %}
+<h2>Quotation for Event: {{ event.event_name }}</h2>
+
+{% for category, products in categories.items %}
+    <h3 class="mt-4">{{ category }}</h3>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Rate (₹)</th>
+                <th>Quantity</th>
+                <th>Total (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td><img src="{{ product.ssp.image.url }}" alt="{{ product.ssp.name }}" width="50"></td>
+                <td>{{ product.ssp.name }}</td>
+                <td>₹{{ product.ssp.rate_per_event }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>₹{{ product.quantity|multiply:product.ssp.rate_per_event }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h5 class="text-end"><strong>Total for {{ category }}: ₹{{ category_totals|get_item:category }}</strong></h5>
+    <hr>
+{% endfor %}
+
+<h3 class="text-end mt-4"><strong>Grand Total: ₹{{ grand_total }}</strong></h3>
+
+<a href="{% url 'event_creation:dashboard_ec' event.event_id %}" class="btn btn-primary">Back to Dashboard</a>
+{% endblock %}

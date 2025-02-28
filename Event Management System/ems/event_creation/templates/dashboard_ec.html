@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Event Name -->
+    <h2 class="mb-2">Group: {{ event.group }}</h2>
+    <h2 class="mb-4">Event: {{ event.event_name }}</h2>
+    <h5 class="mb-4">Date: {{ event.date }}</h5>
+    <h5 class="mb-4">Type: {{ event.event_type }}</h5>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-start gap-3">
+        <!-- Start Flow Button -->
+        <a href="{% url 'event_creation:start_flow' event.event_id%}" class="btn btn-success btn-lg" title="Start SSP Flow">
+            <i class="bi bi-play-circle"></i> Start Flow
+        </a>
+        <br>
+        <!-- PPT Button -->
+        <a href="{% url 'event_creation:generate_ppt' event.event_id %}" class="btn btn-primary btn-lg" title="Generate PPT">
+            <i class="bi bi-file-earmark-slides"></i> PPT
+        </a>
+        <br>
+        <!-- Quotation Button -->
+        <a href="{% url 'event_creation:quotation' event.event_id%}" class="btn btn-secondary btn-lg" title="Generate Quotation">
+            <i class="bi bi-receipt"></i> Quotation
+        </a>
+        <br>
+
+    </div>
+</div>
+{% endblock %}

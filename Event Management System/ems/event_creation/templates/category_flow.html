@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="container">
+    <h2>{{ category_name }} Selection for {{ event.name }}</h2>
+
+    <style>
+        .card {
+            max-width: 150px;
+            /* Adjust card size */
+            margin: auto;
+        }
+
+        .card img {
+            height: 100px;
+            /* Adjust image size */
+            object-fit: cover;
+        }
+    </style>
+<form method="POST" id="category-form">
+    {% csrf_token %}
+    <div class="row g-2">  
+        {% for ssp in ssps %}
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 d-flex"> 
+            <div class="card" style="width: 100%;">
+                <img src="{{ ssp.image.url }}" class="card-img-top" alt="{{ ssp.name }}">
+                <div class="card-body text-center">
+                    <h6 class="card-title">{{ ssp.name }}</h6>
+                    <p class="card-text">Rent: {{ ssp.rate_per_event }}</p>
+                    
+                    <div id="product-{{ ssp.item_id }}">
+                        {% if ssp.item_id in linked_ssps %}
+                            <!-- When product is already linked, show quantity and remove button -->
+                            <input type="hidden" name="ssp_ids[]" value="{{ ssp.item_id }}">
+                            <input type="number" name="quantities[]" value="{{ linked_ssps|dict_key:ssp.item_id|attr:'quantity' }}" min="0" class="form-control mb-2 quantity-input">
+                            <button type="button" class="btn btn-danger btn-sm remove-btn" data-item-id="{{ ssp.item_id }}">Remove</button>
+
+                            <!-- Add button will be shown after removal -->
+                            <button type="button" class="btn btn-success btn-sm add-btn" data-item-id="{{ ssp.item_id }}" style="display: none;">Add</button>
+                        {% else %}
+                            <!-- If not linked, show the Add button and hidden form initially -->
+                            <button type="button" class="btn btn-success btn-sm add-btn" data-item-id="{{ ssp.item_id }}">Add</button>
+
+                            <input type="hidden" name="ssp_ids[]" value="{{ ssp.item_id }}">
+                            <input type="number" name="quantities[]" value="0" min="0" class="form-control mb-2 quantity-input" style="display: none;">
+                            <button type="button" class="btn btn-danger btn-sm remove-btn" data-item-id="{{ ssp.item_id }}" style="display: none;">Remove</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        {% if category_name != "Furniture" %}
+            <button type="submit" name="navigation" value="previous" class="btn btn-secondary">Previous</button>
+        {% endif %}
+        {% if category_name != "Miscellaneous" %}
+            <button type="submit" name="navigation" value="next" class="btn btn-primary">Next</button>
+        {% endif %}
+        <button type="submit" name="navigation" value="finish" class="btn btn-success">Finish</button>
+    </div>
+</form>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add button logic
+        document.querySelectorAll(".add-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let itemId = this.getAttribute("data-item-id");
+                let inputField = document.querySelector(`#product-${itemId} .quantity-input`);
+                let removeButton = document.querySelector(`#product-${itemId} .remove-btn`);
+
+                // Show input and remove button, hide add button
+                inputField.style.display = "block";
+                inputField.value = 1; // Set quantity to 1
+                removeButton.style.display = "block";
+                this.style.display = "none";
+            });
+        });
+
+        // Remove button logic
+        document.querySelectorAll(".remove-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let itemId = this.getAttribute("data-item-id");
+                let inputField = document.querySelector(`#product-${itemId} .quantity-input`);
+                let addButton = document.querySelector(`#product-${itemId} .add-btn`);
+
+                // Hide input and remove button, show add button
+                inputField.style.display = "none";
+                inputField.value = 0; // Reset quantity to 0
+                this.style.display = "none";
+                addButton.style.display = "block";
+            });
+        });
+    });
+</script>
+
+    
+
+
+</div>
+{% endblock %}

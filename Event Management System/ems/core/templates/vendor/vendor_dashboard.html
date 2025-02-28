@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Vendor Dashboard</h1>
+
+    <!-- Add Vendor Button and Search/Filter Form -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'add_vendor' %}" class="btn btn-primary">Add Vendor</a>
+        <form method="get" class="d-flex gap-2 align-items-center flex-wrap">
+            <input type="text" name="query" class="form-control" placeholder="Search by Name or Contact Info" value="{{ query }}" style="max-width: 250px;">
+            <select name="service_type" class="form-select" style="max-width: 200px;">
+                <option value="">Filter by Service Type</option>
+                <option value="DJ" {% if service_type == "DJ" %}selected{% endif %}>DJ</option>
+                <option value="Catering" {% if service_type == "Catering" %}selected{% endif %}>Catering</option>
+                <!-- Add more options as needed -->
+            </select>
+            <input type="number" step="0.1" min="0" max="5" name="min_rating" class="form-control" placeholder="Min Rating" value="{{ min_rating }}" style="max-width: 150px;">
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i> Search</button>
+        </form>
+    </div>
+
+    <!-- Vendor Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Vendor Name</th>
+                    <th>Service Type</th>
+                    <th>Rating</th>
+                    <th>Rate per Event</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if vendors %}
+                    {% for vendor in vendors %}
+                    <tr>
+                        <td>{{ vendor.vendor_id }}</td>
+                        <td>{{ vendor.vendor_name }}</td>
+                        <td>{{ vendor.service_type }}</td>
+                        <td>{{ vendor.rating|default:"N/A" }}</td>
+                        <td>{{ vendor.rate_per_event }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'edit_vendor' vendor.vendor_id %}" class="btn btn-warning btn-sm" title="Edit Vendor">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a href="{% url 'assign_vendor' %}?vendor_id={{ vendor.vendor_id }}" class="btn btn-success btn-sm" title="Assign Vendor">
+                                    <i class="bi bi-person-plus-fill"></i> Assign
+                                </a>
+                                <a href="{% url 'assignment_detail' vendor.vendor_id %}" class="btn btn-success btn-sm" title="Manage Vendor">
+                                    <i class="bi bi-person-plus-fill"></i> Manage
+                                </a>
+                                <button class="btn btn-info btn-sm details-btn" 
+                                        data-details="{{ vendor.details|default:'No details provided.' }}" 
+                                        title="View Details">
+                                    <i class="bi bi-info-circle-fill"></i> Details
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No vendors found. Try refining your search or add new vendors.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Popup for Vendor Details -->
+    <div id="detailsPopup" class="details-popup" style="display: none; position: absolute; z-index: 1050; background: #f8f9fa; border: 1px solid #ccc; padding: 15px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+        <p id="vendorDetails"></p>
+        <button id="closePopup" class="btn btn-secondary btn-sm mt-2">Close</button>
+    </div>
+</div>
+
+<!-- JavaScript for Popup -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const detailsButtons = document.querySelectorAll(".details-btn");
+        const popup = document.getElementById("detailsPopup");
+        const vendorDetails = document.getElementById("vendorDetails");
+        const closePopup = document.getElementById("closePopup");
+
+        detailsButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                // Get details text from data attribute
+                const details = this.getAttribute("data-details");
+
+                // Position the popup near the button
+                const rect = this.getBoundingClientRect();
+                popup.style.left = `${rect.right + window.scrollX + 10}px`;
+                popup.style.top = `${rect.top + window.scrollY}px`;
+
+                // Set details and show popup
+                vendorDetails.textContent = details;
+                popup.style.display = "block";
+            });
+        });
+
+        // Close the popup
+        closePopup.addEventListener("click", function () {
+            popup.style.display = "none";
+        });
+    });
+</script>
+{% endblock %}

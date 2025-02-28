@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Add SSPs for Event: {{ event.event_name }}</h2>
+  <div>
+    {% if ssps %}
+      <form method="post" action="">
+        {% csrf_token %}
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Rate</th>
+              <th>Tags</th>
+              <th>Quantity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ssp in ssps %}
+              <tr>
+                <td><img src="{{ ssp.image.url }}" alt="{{ ssp.name }}" width="50"></td>
+                <td>{{ ssp.name }}</td>
+                <td>₹{{ ssp.rate_per_event }}</td>
+                <td>{{ ssp.tags }}</td>
+                <td>
+                  <input type="hidden" name="ssps" value="{{ ssp.item_id }}">
+                  <input type="number" name="quantities" value="0" style="display: none;" id="quantity-{{ ssp.item_id }}">
+                </td>
+                <td>
+                  <button type="button" class="add-button" data-id="{{ ssp.item_id }}">Add</button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button type="submit" style="display: none;" id="submit-button">Submit</button>
+      </form>
+    {% else %}
+      <h3>No SSPs available for Event - {{ event.event_name }}.</h3>
+    {% endif %}
+  </div>
+
+  <script>
+    document.querySelectorAll('.add-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const sspId = this.getAttribute('data-id');
+        const quantityInput = document.getElementById(`quantity-${sspId}`);
+        quantityInput.value = 1;
+        quantityInput.style.display = 'inline-block';
+        this.style.display = 'none';
+        document.getElementById('submit-button').style.display = 'inline-block';
+      });
+    });
+  </script>
+{% endblock %}

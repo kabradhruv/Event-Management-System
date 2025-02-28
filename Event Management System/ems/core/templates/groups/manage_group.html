@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Manage Events for Group: {{ group.group_name }}</h2>
+
+    <!-- Add Event Button -->
+    <div class="text-end mb-3">
+        <a href="{% url 'add_event' group.group_id %}" class="btn btn-primary">Add New Event</a>
+    </div>
+
+    <!-- Events Table -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Event Name</th>
+                <th>Event Type</th>
+                <th>Date</th>
+                <th>Budget</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Manage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.event_name }}</td>
+                <td>{{ event.event_type }}</td>
+                <td>{{ event.date }}</td>
+                <td>${{ event.budget }}</td>
+                <td>{{ event.description }}</td>
+                <td>
+                    <a href="{% url 'edit_event' event.event_id %}" class="btn btn-secondary btn-sm">Edit Event</a>
+                </td>
+                <td>
+                    <a href="{% url 'manage_event' event.event_id %}" class="btn btn-secondary btn-sm">Manage Event</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No events found for this group.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
